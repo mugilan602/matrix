@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matrix Rain Effect</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            background: black;
+        }
+        
+        canvas {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="c"></canvas>
+
+    <script>
+        // geting canvas by Boujjou Achraf
+        var c = document.getElementById("c");
+        var ctx = c.getContext("2d");
+
+        // making the canvas full screen
+        c.height = window.innerHeight;
+        c.width = window.innerWidth;
+
+        // characters - taken from the unicode charset
+        var matrix = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456789@#$%^&()&^%+-/~{[|`]}";
+        matrix = matrix.split(""); // converting the string into an array of characters
+
+        var font_size = 10;
+        var columns = c.width / font_size; // number of columns for the rain
+        var drops = []; // array of drops - one per column
+
+        // initialize each drop at position 1 (top of the screen)
+        for (var x = 0; x < columns; x++)
+            drops[x] = 1; 
+
+        // drawing the characters
+        function draw() {
+            // Black background for the canvas with a slight transparency to create the trailing effect
+            ctx.fillStyle = "rgba(0, 0, 0, 0.04)";
+            ctx.fillRect(0, 0, c.width, c.height);
+
+            // Pink text
+            ctx.fillStyle = "#f4427d";
+            ctx.font = font_size + "px arial";
+
+            // Loop over all drops
+            for (var i = 0; i < drops.length; i++) {
+                // Pick a random character from the matrix array
+                var text = matrix[Math.floor(Math.random() * matrix.length)];
+                // Draw the character at the x (i * font_size) and y (drops[i] * font_size)
+                ctx.fillText(text, i * font_size, drops[i] * font_size);
+
+                // Send the drop back to the top randomly after it crosses the screen
+                if (drops[i] * font_size > c.height && Math.random() > 0.975)
+                    drops[i] = 0;
+
+                // Increment y position for drop
+                drops[i]++;
+            }
+        }
+
+        // Draw the animation at an interval
+        setInterval(draw, 35);
+    </script>
+</body>
+</html>
